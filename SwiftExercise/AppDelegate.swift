@@ -7,6 +7,11 @@
 
 import UIKit
 
+let kScreenWidth = UIScreen.main.bounds.width
+let kScreenHeight = UIScreen.main.bounds.height
+let buttonHeight = CGFloat(50)
+let onceLoadNum = 10
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

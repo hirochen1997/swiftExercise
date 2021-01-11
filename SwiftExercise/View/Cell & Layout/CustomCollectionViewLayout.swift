@@ -10,7 +10,7 @@ import UIKit
 class CustomCollectionViewLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        var array = super.layoutAttributesForElements(in: rect) ?? []
+        let array = super.layoutAttributesForElements(in: rect) ?? []
         
         //第一行贴近顶部
         array[0].frame.origin.y = 0

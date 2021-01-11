@@ -7,16 +7,6 @@
 
 import UIKit
 
-struct HomeShortVideoViewData {
-    var videoFrameImgURL = ""
-    var useName = ""
-    var info = ""
-    var userImgURL = ""
-    var title = ""
-}
-
-
-
 class HomeShortVideoViewCell: UICollectionViewCell {
     let videoFrameImg = UIImageView()
     let info = UILabel()
@@ -26,6 +16,10 @@ class HomeShortVideoViewCell: UICollectionViewCell {
     
     let kScreenWidth = UIScreen.main.bounds.width
     let kScreenHeight = UIScreen.main.bounds.height
+    
+    static let minimumInteritemSpacing: CGFloat = 5
+    static let minimumLineSpacing: CGFloat = 5
+    static let sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,7 +46,7 @@ class HomeShortVideoViewCell: UICollectionViewCell {
     
     // 因为cell的重用机制，为了避免从队列中取出来的cell不受到之前设置的影响，重新初始化设置
     func initSetUp() {
-        videoFrameImg.frame = CGRect(x: 0, y: 0, width: (kScreenWidth-40)/2, height: kScreenWidth*0.6)
+        videoFrameImg.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: kScreenWidth*0.6)
         videoFrameImg.backgroundColor = UIColor.red
         
         title.frame = CGRect(x: 0, y: videoFrameImg.frame.origin.y+videoFrameImg.frame.height+3, width: videoFrameImg.frame.width, height: 40)

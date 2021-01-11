@@ -7,14 +7,6 @@
 
 import UIKit
 
-struct HomeFollowViewData {
-    var userName = ""
-    var fansCount = ""
-    var isFollow = false
-    var userImgURL = ""
-    var showListURLs = ["","","",""]
-}
-
 class HomeFollowViewCell: UICollectionViewCell {
     let userName = UILabel()
     let fansCount = UILabel()
