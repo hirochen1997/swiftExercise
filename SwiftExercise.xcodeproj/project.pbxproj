@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		45651A5D25A9CF0D005B429D /* CustomCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45651A5C25A9CF0D005B429D /* CustomCollectionViewLayout.swift */; };
-		456624DD25AEA1F60084570C /* HomeTVViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456624DC25AEA1F60084570C /* HomeTVViewController.swift */; };
 		45693AAD25ABF8F70097903B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45693AAC25ABF8F70097903B /* HomeView.swift */; };
 		45693AB025ABFD640097903B /* HomeFollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45693AAF25ABFD640097903B /* HomeFollowView.swift */; };
 		45693AB325ABFD710097903B /* HomeFreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45693AB225ABFD710097903B /* HomeFreshView.swift */; };
@@ -34,7 +33,6 @@
 
 /* Begin PBXFileReference section */
 		45651A5C25A9CF0D005B429D /* CustomCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewLayout.swift; sourceTree = "<group>"; };
-		456624DC25AEA1F60084570C /* HomeTVViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTVViewController.swift; sourceTree = "<group>"; };
 		45693AAC25ABF8F70097903B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		45693AAF25ABFD640097903B /* HomeFollowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFollowView.swift; sourceTree = "<group>"; };
 		45693AB225ABFD710097903B /* HomeFreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFreshView.swift; sourceTree = "<group>"; };
@@ -161,7 +159,6 @@
 				45C111B825A46625003D28CA /* FoundViewController.swift */,
 				45C111BB25A46647003D28CA /* MessageViewController.swift */,
 				45C111BE25A46656003D28CA /* MineViewController.swift */,
-				456624DC25AEA1F60084570C /* HomeTVViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -236,7 +233,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				45693AC125AC40880097903B /* HomeFollowViewModel.swift in Sources */,
-				456624DD25AEA1F60084570C /* HomeTVViewController.swift in Sources */,
 				45693AB625ABFD7F0097903B /* HomeRecommendView.swift in Sources */,
 				45C111B925A46625003D28CA /* FoundViewController.swift in Sources */,
 				45C1119E25A448DA003D28CA /* AppDelegate.swift in Sources */,
