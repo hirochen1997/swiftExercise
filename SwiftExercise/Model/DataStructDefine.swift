@@ -21,3 +21,7 @@ struct HomeShortVideoViewData {
     var title = ""
 }
 
+struct HomeTVViewData {
+    var tvURL = ""
+    var userName = ""
+}

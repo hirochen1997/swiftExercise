@@ -12,6 +12,10 @@ class HomeView: UIView, UIScrollViewDelegate {
     
     let contentScrollView = UIScrollView()
     let titleScroll = UIImageView() // 自己定义一个标题栏的滚动条
+    let homeFollowView = HomeFollowView()
+    let homeFreshView = HomeFreshView()
+    let homeRecommendView = HomeRecommendView()
+    let homeTVView = HomeTVView()
     
     var ButtonList: [UIButton] = []
     var selectedButton = 0, lastSelecetedButton = 0
@@ -93,13 +97,15 @@ class HomeView: UIView, UIScrollViewDelegate {
         contentScrollView.isScrollEnabled = true
         contentScrollView.isPagingEnabled = true // 设置为true才有翻页效果，不然一直滑
         contentScrollView.showsHorizontalScrollIndicator = true
+        contentScrollView.bounces = false
+        
         contentScrollView.delegate = self
         
         // 定义每一个页面
-        let homeFollowView = HomeFollowView(frame: CGRect(x: 0, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height))
-        let homeFreshView = HomeFreshView(frame: CGRect(x: kScreenWidth, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height))
-        let homeRecommendView = HomeRecommendView(frame: CGRect(x: kScreenWidth*2, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height))
-        let homeTVView = HomeTVView(frame: CGRect(x: kScreenWidth*3, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height))
+        homeFollowView.frame = CGRect(x: 0, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height)
+        homeFreshView.frame = CGRect(x: kScreenWidth, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height)
+        homeRecommendView.frame = CGRect(x: kScreenWidth*2, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height)
+        homeTVView.frame = CGRect(x: kScreenWidth*3, y: 0, width: contentScrollView.frame.width, height: contentScrollView.frame.height)
 
         contentScrollView.addSubview(homeFollowView)
         contentScrollView.addSubview(homeFreshView)
@@ -107,10 +113,23 @@ class HomeView: UIView, UIScrollViewDelegate {
         contentScrollView.addSubview(homeTVView)
         contentScrollView.contentSize = CGSize(width: 4*kScreenWidth, height: 0)
         self.addSubview(contentScrollView)
+        
+        // 初始页面设置为避风TV
+        contentScrollView.setContentOffset(homeTVView.frame.origin, animated: false)
     }
     
     @objc func syncTitleAndContent(button: UIButton) {
+        if contentScrollView.contentOffset.x == homeTVView.frame.origin.x {
+            // 跳转前是避风TV模块的话，就关闭正在播放的tv
+            homeTVView.stopTV()
+        }
+        
         contentScrollView.setContentOffset(CGPoint(x: CGFloat(button.tag) * kScreenWidth, y: 0), animated: false)
+        
+        if contentScrollView.contentOffset.x == homeTVView.frame.origin.x {
+            // 跳转后是避风TV模块的话，就重新播放tv
+            homeTVView.startTV()
+        }
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -135,4 +154,20 @@ class HomeView: UIView, UIScrollViewDelegate {
         ButtonList[selectedButton].isSelected = true
         
     }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        if scrollView.contentOffset.x < homeTVView.frame.origin.x {
+            // 当前页面不是避风tv模块时，暂停tv里的视频
+            homeTVView.stopTV()
+            
+        } else {
+            // 当前页面是避风tv模块时，播放tv里的视频
+            homeTVView.startTV()
+        }
+        
+        
+    }
+    
+    
 }
