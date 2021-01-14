@@ -24,7 +24,7 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func initShortVideoView() {
-        let layout = CustomCollectionViewLayout()
+        let layout = ShortVideoCollectionViewLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = HomeShortVideoViewCell.minimumLineSpacing
         layout.minimumInteritemSpacing = HomeShortVideoViewCell.minimumInteritemSpacing
@@ -98,7 +98,7 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             recommendCellBottom[0] = 0
             recommendCellBottom[1] = 0
             // 刷新layout的attribute数组
-            (collectionViewLayout as! CustomCollectionViewLayout).refreshLayoutAttributes()
+            (collectionViewLayout as! ShortVideoCollectionViewLayout).refreshLayoutAttributes()
         }
         
         recommendCellBottom[indexPath.row % 2] += height + (collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing
@@ -108,7 +108,7 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         }
         
         // 设置当前cell的layout
-        (collectionViewLayout as! CustomCollectionViewLayout).setLayoutAttributesForItem(at: indexPath, size: CGSize(width: width, height: height))
+        (collectionViewLayout as! ShortVideoCollectionViewLayout).setLayoutAttributesForItem(at: indexPath, size: CGSize(width: width, height: height))
         
         return CGSize(width: width, height: height)
     }

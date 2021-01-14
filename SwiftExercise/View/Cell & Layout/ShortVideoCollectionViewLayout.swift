@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomCollectionViewLayout: UICollectionViewFlowLayout {
+class ShortVideoCollectionViewLayout: UICollectionViewFlowLayout {
     var attributesArray: [UICollectionViewLayoutAttributes] = []
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {

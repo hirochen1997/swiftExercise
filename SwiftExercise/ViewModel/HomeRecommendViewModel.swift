@@ -18,7 +18,7 @@ class HomeRecommendViewModel: NSObject {
     
     func fetchData() {
         for _ in 0..<onceLoadNum {
-            var t_data = HomeShortVideoViewData(videoFrameImgURL: "", useName: "", info: "", userImgURL: "", title: "")
+            var t_data = HomeShortVideoViewData(videoFrameImgURL: "", useName: "名字太长了爱神的箭佛", info: "", userImgURL: "", title: "")
             
             // 读取数据
             let watchAmount = arc4random() % 10000000

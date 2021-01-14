@@ -23,7 +23,7 @@ class HomeFreshView: UIView, UICollectionViewDelegate, UICollectionViewDataSourc
     }
     
     func initShortVideoView() {
-        let layout = CustomCollectionViewLayout()
+        let layout = ShortVideoCollectionViewLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = HomeShortVideoViewCell.minimumLineSpacing
         layout.minimumInteritemSpacing = HomeShortVideoViewCell.minimumInteritemSpacing
@@ -105,7 +105,7 @@ class HomeFreshView: UIView, UICollectionViewDelegate, UICollectionViewDataSourc
         }
         
         // 设置当前cell的layout
-        (collectionViewLayout as! CustomCollectionViewLayout).setLayoutAttributesForItem(at: indexPath, size: CGSize(width: width, height: height))
+        (collectionViewLayout as! ShortVideoCollectionViewLayout).setLayoutAttributesForItem(at: indexPath, size: CGSize(width: width, height: height))
         
         return CGSize(width: width, height: height)
     }

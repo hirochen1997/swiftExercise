@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		45651A5D25A9CF0D005B429D /* CustomCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45651A5C25A9CF0D005B429D /* CustomCollectionViewLayout.swift */; };
+		45651A5D25A9CF0D005B429D /* ShortVideoCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45651A5C25A9CF0D005B429D /* ShortVideoCollectionViewLayout.swift */; };
 		45693AAD25ABF8F70097903B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45693AAC25ABF8F70097903B /* HomeView.swift */; };
 		45693AB025ABFD640097903B /* HomeFollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45693AAF25ABFD640097903B /* HomeFollowView.swift */; };
 		45693AB325ABFD710097903B /* HomeFreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45693AB225ABFD710097903B /* HomeFreshView.swift */; };
@@ -32,7 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		45651A5C25A9CF0D005B429D /* CustomCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewLayout.swift; sourceTree = "<group>"; };
+		45651A5C25A9CF0D005B429D /* ShortVideoCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortVideoCollectionViewLayout.swift; sourceTree = "<group>"; };
 		45693AAC25ABF8F70097903B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		45693AAF25ABFD640097903B /* HomeFollowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFollowView.swift; sourceTree = "<group>"; };
 		45693AB225ABFD710097903B /* HomeFreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFreshView.swift; sourceTree = "<group>"; };
@@ -103,7 +103,7 @@
 				456FF58625A6E41F00EF5109 /* HomeFollowViewCell.swift */,
 				456FF58A25A6E49100EF5109 /* HomeShortVideoViewCell.swift */,
 				459A521225AD8FE0000C0222 /* HomeTVViewCell.swift */,
-				45651A5C25A9CF0D005B429D /* CustomCollectionViewLayout.swift */,
+				45651A5C25A9CF0D005B429D /* ShortVideoCollectionViewLayout.swift */,
 			);
 			path = "Cell & Layout";
 			sourceTree = "<group>";
@@ -240,7 +240,7 @@
 				456FF58725A6E41F00EF5109 /* HomeFollowViewCell.swift in Sources */,
 				45693AC625AC4E420097903B /* HomeFreshViewModel.swift in Sources */,
 				45693ACC25AC4E5C0097903B /* HomeTVViewModel.swift in Sources */,
-				45651A5D25A9CF0D005B429D /* CustomCollectionViewLayout.swift in Sources */,
+				45651A5D25A9CF0D005B429D /* ShortVideoCollectionViewLayout.swift in Sources */,
 				45693AB925ABFD970097903B /* HomeTVView.swift in Sources */,
 				45693AAD25ABF8F70097903B /* HomeView.swift in Sources */,
 				45C111BF25A46656003D28CA /* MineViewController.swift in Sources */,

@@ -8,11 +8,12 @@
 import UIKit
 import AVKit
 
-class HomeTVView: UIView, UITableViewDelegate, UITableViewDataSource {
+class HomeTVView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-    var viewModel = HomeTVViewModel()
+    let viewModel = HomeTVViewModel()
+    var collectionView: UICollectionView?
+    
     var canRefresh = false
-    let tableView = UITableView()
     var firstAppear = true
     
     override init(frame: CGRect) {
@@ -25,73 +26,82 @@ class HomeTVView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func initTVView() {
-        tableView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-2*buttonHeight-AppDelegate.tabHeight)
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: kScreenWidth, height: kScreenHeight-2*buttonHeight-AppDelegate.tabHeight)
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 0
         
-        tableView.backgroundColor = UIColor.gray
-        tableView.isScrollEnabled = true
-        tableView.isPagingEnabled = true
-        tableView.rowHeight = kScreenHeight-2*buttonHeight-AppDelegate.tabHeight
-        tableView.estimatedRowHeight = 0
-        //tableView.showsVerticalScrollIndicator = false
+        collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-2*buttonHeight-AppDelegate.tabHeight), collectionViewLayout: layout) 
         
-        tableView.register(HomeTVViewCell.self, forCellReuseIdentifier: "tvCell")
+        collectionView!.isScrollEnabled = true
+        collectionView!.isPagingEnabled = true
+        collectionView!.showsVerticalScrollIndicator = false
         
-        tableView.delegate = self
-        tableView.dataSource = self
+        collectionView!.register(HomeTVViewCell.self, forCellWithReuseIdentifier: "tvCell")
         
-        self.addSubview(tableView)
+        collectionView!.delegate = self
+        collectionView!.dataSource = self
+        
+        self.addSubview(collectionView!)
         
         
     }
     
     // 关闭当前显示的cell的TV播放
     func stopTV() {
-        let visibleCells = tableView.visibleCells
+        let visibleCells = collectionView!.visibleCells
         for cell in visibleCells {
             (cell as! HomeTVViewCell).playerLayer.player?.pause()
+            (cell as! HomeTVViewCell).isPlaying = false
+            (cell as! HomeTVViewCell).playButton.setImage(UIImage(named: "play.jpg"), for: .normal)
         }
     }
     
     // 重新播放当前显示的cell的tv
     func startTV() {
-        let visibleCells = tableView.visibleCells
+        let visibleCells = collectionView!.visibleCells
         for cell in visibleCells {
             (cell as! HomeTVViewCell).playerLayer.player?.seek(to: CMTimeMake(value: 0, timescale: 1))
             (cell as! HomeTVViewCell).playerLayer.player?.play()
+            (cell as! HomeTVViewCell).isPlaying = true
+            (cell as! HomeTVViewCell).playButton.setImage(UIImage(named: "stop.jpg"), for: .normal)
         }
     }
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        // 结束显示时停止当前cell的tv播放
-        (cell as! HomeTVViewCell).playerLayer.player?.pause()
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.datas.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tvCell", for: indexPath) as! HomeTVViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "tvCell", for: indexPath) as! HomeTVViewCell
         
         cell.userName.text = viewModel.datas[indexPath.row].userName
         cell.setTV(tvURL: viewModel.datas[indexPath.row].tvURL)
-        cell.frame.size.height = tableView.rowHeight
+        
         if firstAppear {
             cell.playerLayer.player?.play()
+            cell.isPlaying = true
+            cell.playButton.setImage(UIImage(named: "stop.jpg"), for: .normal)
             firstAppear = false
         }
         
         return cell
     }
-    
+
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        (cell as! HomeTVViewCell).playerLayer.player?.pause()
+        (cell as! HomeTVViewCell).isPlaying = false
+        (cell as! HomeTVViewCell).playButton.setImage(UIImage(named: "play.jpg"), for: .normal)
+    }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView.contentOffset.y == 0 && canRefresh {
             canRefresh = false
             viewModel.datas.removeAll()
             viewModel.fetchData()
-            (scrollView as! UITableView).layoutIfNeeded()
-            (scrollView as! UITableView).reloadData()
+            (scrollView as! UICollectionView).layoutIfNeeded()
+            (scrollView as! UICollectionView).reloadData()
+            firstAppear = true
             print("reload")
         }
         
@@ -113,7 +123,7 @@ class HomeTVView: UIView, UITableViewDelegate, UITableViewDataSource {
             scrollView.setContentOffset(CGPoint(x: 0, y: cellBottom), animated: false)
             // 拉取新的数据，实现向下滚动无限刷新
             viewModel.fetchData()
-            (scrollView as! UITableView).reloadData()
+            (scrollView as! UICollectionView).reloadData()
             print("more data")
         }
     }
@@ -122,5 +132,7 @@ class HomeTVView: UIView, UITableViewDelegate, UITableViewDataSource {
         // 当某个cell刚好完全出现时开始播放tv
         startTV()
     }
+    
+    
     
 }
