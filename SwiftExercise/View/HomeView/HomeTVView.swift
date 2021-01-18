@@ -90,6 +90,7 @@ class HomeTVView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
 
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         (cell as! HomeTVViewCell).playerLayer.player?.pause()
+        (cell as! HomeTVViewCell).playerLayer.player?.seek(to: CMTimeMake(value: 0, timescale: 1))
         (cell as! HomeTVViewCell).isPlaying = false
         (cell as! HomeTVViewCell).playButton.setImage(UIImage(named: "play.jpg"), for: .normal)
     }

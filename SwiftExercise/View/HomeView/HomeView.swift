@@ -20,6 +20,7 @@ class HomeView: UIView, UIScrollViewDelegate {
     var ButtonList: [UIButton] = []
     var selectedButton = 0, lastSelecetedButton = 0
     var infoList: [String] = []
+    var lastModule = 3 // 滑动前的模块序号
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -161,11 +162,11 @@ class HomeView: UIView, UIScrollViewDelegate {
             // 当前页面不是避风tv模块时，暂停tv里的视频
             homeTVView.stopTV()
             
-        } else {
+        } else if lastModule < 3 {
             // 当前页面是避风tv模块时，播放tv里的视频
             homeTVView.startTV()
         }
-        
+        lastModule = Int(scrollView.contentOffset.x / scrollView.frame.width)
         
     }
     

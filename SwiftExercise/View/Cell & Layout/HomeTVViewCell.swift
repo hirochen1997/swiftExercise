@@ -89,12 +89,14 @@ class HomeTVViewCell: UICollectionViewCell {
             
             // 修改进度条&时间显示
             weakRef?.changeTimeProgress(playTime: playTime, totalTime: totalTime)
-            
+            weakRef?.progressSlider.value = Float(progress)
             
             if (progress == 1.0) {
                 //播放百分比为1表示已经播放完毕
-                print("播放完成")
-                //处理播放完成之后的操作
+                weakRef?.playerLayer.player?.pause()
+                weakRef?.playerLayer.player?.seek(to: CMTimeMake(value: 0, timescale: 1))
+                weakRef?.isPlaying = false
+                weakRef?.playButton.setImage(UIImage(named: "play.jpg"), for: .normal)
                 
             }
             
@@ -146,7 +148,7 @@ class HomeTVViewCell: UICollectionViewCell {
         let hour = (playTime / 3600 < 10 ? "0" : "") + String(playTime/3600)
         let minute = (playTime % 3600 / 60 < 10 ? "0" : "") + String(playTime%3600/60)
         let second = (playTime % 3600 % 60 < 10 ? "0" : "") + String(playTime%3600%60)
-        
+
         if totalTime >= 3600 {
             // 超过1小时的采用时分秒
             progressTime.text = hour + ":" + minute + ":" + second
