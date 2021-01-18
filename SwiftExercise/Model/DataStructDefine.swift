@@ -5,6 +5,8 @@
 //  Created by hiro on 2021/1/11.
 //
 
+import Foundation
+
 struct HomeFollowViewData {
     var userName = ""
     var fansCount = ""
@@ -25,3 +27,4 @@ struct HomeTVViewData {
     var tvURL = ""
     var userName = ""
 }
+

@@ -96,6 +96,8 @@ class HomeFreshView: UIView, UICollectionViewDelegate, UICollectionViewDataSourc
         if indexPath.row == 0 {
             freshCellBottom[0] = 0
             freshCellBottom[1] = 0
+            // 刷新layout的attribute数组
+            (collectionViewLayout as! ShortVideoCollectionViewLayout).refreshLayoutAttributes()
         }
         
         freshCellBottom[indexPath.row % 2] += height + (collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing

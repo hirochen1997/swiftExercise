@@ -41,6 +41,10 @@ class HomeTVViewCell: UICollectionViewCell {
         progressSlider.frame = CGRect(x: 50, y: kScreenHeight/2+30, width: kScreenWidth-120, height: 30)
         progressSlider.maximumValue = 1
         progressSlider.minimumValue = 0
+        progressSlider.addTarget(self, action: #selector(dragSlider), for: .touchDragInside)
+        progressSlider.addTarget(self, action: #selector(touchUpSlider), for: .touchUpInside)
+        progressSlider.addTarget(self, action: #selector(touchUpSlider), for: .touchUpOutside)
+        progressSlider.isContinuous = true
         
         playButton.frame = CGRect(x: 5, y: progressSlider.frame.origin.y, width: progressSlider.frame.height, height: progressSlider.frame.height)
         playButton.setImage(UIImage(named: "stop"), for: .normal)
@@ -64,47 +68,44 @@ class HomeTVViewCell: UICollectionViewCell {
     }
     
     func setTV(tvURL: String) {
-        // 先去掉原来的tvPlayer的observer
-        if timeObserver != nil {
-            playerLayer.player?.removeTimeObserver(timeObserver!)
-        }
+        removeTimeObserver() // 先去掉原来的tvPlayer的observer
         
         let videoURL = URL(string: tvURL)!
         let tvPlayer = AVPlayer(url: videoURL)
         progressTime.text = CMTimeGetSeconds(tvPlayer.currentItem!.duration) >= 3600 ? "00:00:00" : "00:00"
+        playerLayer.player = tvPlayer
         
+        addTimeObserver()
+        
+    }
+    
+    func addTimeObserver() {
         weak var weakRef = self // 防止block访问成员变量时捕获self引起循环引用
-        timeObserver = tvPlayer.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: CMTimeScale(NSEC_PER_SEC)), queue: nil, using: {(cmtime) in
+        
+        timeObserver = playerLayer.player!.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: CMTimeScale(NSEC_PER_SEC)), queue: nil, using: {(cmtime) in
             let playTime = Int(cmtime.seconds)
-            let totalTime = CMTimeGetSeconds(tvPlayer.currentItem!.duration)
-            let progress = Double(playTime) / totalTime
+            let totalTime = CMTimeGetSeconds(weakRef!.playerLayer.player!.currentItem!.duration)
+            let progress = cmtime.seconds / totalTime
             
             // 修改进度条&时间显示
-            weakRef!.progressSlider.value = Float(progress)
-            let hour = (playTime / 3600 < 10 ? "0" : "") + String(playTime/3600)
-            let minute = (playTime % 3600 / 60 < 10 ? "0" : "") + String(playTime%3600/60)
-            let second = (playTime % 3600 % 60 < 10 ? "0" : "") + String(playTime%3600%60)
+            weakRef?.changeTimeProgress(playTime: playTime, totalTime: totalTime)
             
-            if totalTime >= 3600 {
-                // 超过1小时的采用时分秒
-                weakRef!.progressTime.text = hour + ":" + minute + ":" + second
-                
-            } else {
-                // 1小时以内的采用分秒
-                weakRef!.progressTime.text = minute + ":" + second
-            }
             
-
             if (progress == 1.0) {
                 //播放百分比为1表示已经播放完毕
                 print("播放完成")
                 //处理播放完成之后的操作
                 
             }
+            
         })
-        
-        playerLayer.player = tvPlayer
-        
+    }
+    
+    func removeTimeObserver() {
+        if timeObserver != nil {
+            playerLayer.player?.removeTimeObserver(timeObserver!)
+            timeObserver = nil
+        }
     }
     
     @objc func changePlayStatus() {
@@ -119,6 +120,41 @@ class HomeTVViewCell: UICollectionViewCell {
         }
     }
     
+    @objc func dragSlider() {
+        removeTimeObserver()
+    }
     
+    @objc func touchUpSlider() {
+        playerLayer.player?.pause()
+        
+        weak var weakRef = self
+        playerLayer.player?.seek(to: CMTimeMakeWithSeconds(Double(progressSlider.value)*CMTimeGetSeconds(playerLayer.player!.currentItem!.duration), preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTimeMakeWithSeconds(0, preferredTimescale: 1), toleranceAfter: CMTimeMakeWithSeconds(0, preferredTimescale: 1)) { (finished) in
+            //跳转完成之后
+            if finished == true {
+                weakRef!.changeTimeProgress(playTime: Int(Double(weakRef!.progressSlider.value)*CMTimeGetSeconds(weakRef!.playerLayer.player!.currentItem!.duration)), totalTime: CMTimeGetSeconds(weakRef!.playerLayer.player!.currentItem!.duration))
+                weakRef!.addTimeObserver()
+                if weakRef!.isPlaying {
+                    weakRef!.playerLayer.player?.play()
+                }
+            }
+        }
+    
+    }
+    
+    func changeTimeProgress(playTime: Int, totalTime: Double) {
+        // 修改进度条&时间显示
+        let hour = (playTime / 3600 < 10 ? "0" : "") + String(playTime/3600)
+        let minute = (playTime % 3600 / 60 < 10 ? "0" : "") + String(playTime%3600/60)
+        let second = (playTime % 3600 % 60 < 10 ? "0" : "") + String(playTime%3600%60)
+        
+        if totalTime >= 3600 {
+            // 超过1小时的采用时分秒
+            progressTime.text = hour + ":" + minute + ":" + second
+            
+        } else {
+            // 1小时以内的采用分秒
+            progressTime.text = minute + ":" + second
+        }
+    }
     
 }

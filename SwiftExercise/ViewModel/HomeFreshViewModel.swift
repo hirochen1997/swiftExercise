@@ -17,7 +17,7 @@ class HomeFreshViewModel: NSObject {
     
     func fetchData() {
         for _ in 0..<onceLoadNum {
-            var t_data = HomeShortVideoViewData(videoFrameImgURL: "", useName: "取个什么名字好呢", info: "", userImgURL: "", title: "")
+            var t_data = HomeShortVideoViewData(videoFrameImgURL: "", useName: "取\(datas.count)", info: "", userImgURL: "", title: "")
             
             // 读取数据
             let publishTime = arc4random() % 100
