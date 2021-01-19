@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AFNetworking.h>
 #import "MineViewModel.h"
 
 @implementation MineViewModel
@@ -47,6 +48,8 @@
         datas[@"userName"] = @"空";
         datas[@"userImg"] = @"";
     }
+    
+    
 }
 
 @end
