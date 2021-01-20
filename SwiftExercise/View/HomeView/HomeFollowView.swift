@@ -12,9 +12,15 @@ class HomeFollowView: UIView, UICollectionViewDelegate, UICollectionViewDataSour
     let viewModel = HomeFollowViewModel()
     var canRefresh = false
     
+    var collectionView: UICollectionView?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initFollowView()
+        weak var weakRef = self
+        viewModel.fetchData(handle: { ()->Void in
+            weakRef?.collectionView!.reloadData()
+        })
     }
     
     
@@ -28,18 +34,18 @@ class HomeFollowView: UIView, UICollectionViewDelegate, UICollectionViewDataSour
         layout.minimumLineSpacing = 5
         layout.itemSize = CGSize(width: kScreenWidth, height: kScreenWidth/2)
         layout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - 2*buttonHeight),collectionViewLayout: layout)
-        collectionView.register(HomeFollowViewCell.self, forCellWithReuseIdentifier: "FollowCell") // 注册自定义的cell，从而可以在队列里复用
+        collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - 2*buttonHeight),collectionViewLayout: layout)
+        collectionView!.register(HomeFollowViewCell.self, forCellWithReuseIdentifier: "FollowCell") // 注册自定义的cell，从而可以在队列里复用
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        collectionView!.delegate = self
+        collectionView!.dataSource = self
         
-        collectionView.isPagingEnabled = false
-        collectionView.isScrollEnabled = true
-        collectionView.showsVerticalScrollIndicator = true
-        collectionView.backgroundColor = UIColor.white
+        collectionView!.isPagingEnabled = false
+        collectionView!.isScrollEnabled = true
+        collectionView!.showsVerticalScrollIndicator = true
+        collectionView!.backgroundColor = UIColor.white
 
-        self.addSubview(collectionView)
+        self.addSubview(collectionView!)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -49,10 +55,20 @@ class HomeFollowView: UIView, UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FollowCell", for: indexPath) as! HomeFollowViewCell
         
-        let t_data = viewModel.datas[indexPath.row]
-        cell.userName.text = t_data.userName
-        cell.fansCount.text = t_data.fansCount
-        cell.isFollow = t_data.isFollow
+        let tempData = viewModel.datas[indexPath.row]
+        cell.viewModel = viewModel
+        cell.cellIndex = indexPath.row
+        cell.userName.text = tempData.userName
+        cell.fansCount.text = tempData.fansCount
+        
+        if tempData.isFollow {
+            cell.followButton.isSelected = true
+            cell.followButton.backgroundColor = .gray
+        } else {
+            cell.followButton.isSelected = false
+            cell.followButton.backgroundColor = .orange
+        }
+        
         
         return cell
     }
@@ -64,11 +80,11 @@ class HomeFollowView: UIView, UICollectionViewDelegate, UICollectionViewDataSour
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView.contentOffset.y == 0 && canRefresh {
             canRefresh = false
-            viewModel.datas.removeAll()
-            viewModel.fetchData()
-            (scrollView as! UICollectionView).layoutIfNeeded()
-            (scrollView as! UICollectionView).reloadData()
-            print("reload")
+            viewModel.clear()
+            weak var weakRef = self
+            viewModel.fetchData(handle: {()->Void in
+                weakRef?.collectionView?.reloadData()
+            })
         }
         
     }
@@ -89,9 +105,10 @@ class HomeFollowView: UIView, UICollectionViewDelegate, UICollectionViewDataSour
         if scrollView.contentOffset.y > cellBottom {
             scrollView.setContentOffset(CGPoint(x: 0, y: cellBottom), animated: false)
             // 拉取新的数据，实现向下滚动无限刷新
-            viewModel.fetchData()
-            (scrollView as! UICollectionView).reloadData()
-            (scrollView as! UICollectionView).collectionViewLayout.invalidateLayout()
+            weak var weakRef = self
+            viewModel.fetchData(handle: {()->Void in
+                weakRef?.collectionView?.reloadData()
+            })
         }
     }
     

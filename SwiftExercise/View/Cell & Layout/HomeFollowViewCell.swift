@@ -14,10 +14,8 @@ class HomeFollowViewCell: UICollectionViewCell {
     let userImg = UIImageView()
     var showList: [UIImageView] = []
     
-    let kScreenWidth = UIScreen.main.bounds.width
-    let kScreenHeight = UIScreen.main.bounds.height
-    
-    var isFollow = false
+    var viewModel: HomeFollowViewModel!
+    var cellIndex = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,6 +27,20 @@ class HomeFollowViewCell: UICollectionViewCell {
     }
     
     func initCell() {
+        initSetUp()
+        
+        self.addSubview(userImg)
+        self.addSubview(userName)
+        self.addSubview(fansCount)
+        self.addSubview(followButton)
+        for i in 0..<showList.count {
+            self.addSubview(showList[i])
+        }
+        self.backgroundColor = UIColor.lightGray
+    }
+    
+    // 用于cell复用时先初始化避免旧的数据影响
+    func initSetUp() {
         userImg.frame = CGRect(x: 10, y: 5, width: kScreenWidth/6, height: kScreenWidth/6)
         userImg.backgroundColor = UIColor.green
         userImg.layer.masksToBounds = true // 设置遮罩
@@ -45,8 +57,8 @@ class HomeFollowViewCell: UICollectionViewCell {
         
         followButton.frame = CGRect(x: kScreenWidth - 70, y: fansCount.frame.origin.y + 5, width: 70, height: 30)
         
-        followButton.tintColor = UIColor.black
         followButton.setTitle("关注", for: .normal)
+        followButton.setTitle("已关注", for: .selected)
         followButton.backgroundColor = UIColor.orange
         followButton.addTarget(self, action: #selector(changeButtonState), for: .touchUpInside)
         
@@ -56,28 +68,26 @@ class HomeFollowViewCell: UICollectionViewCell {
             showList.append(t_img)
             
         }
-        
-        self.addSubview(userImg)
-        self.addSubview(userName)
-        self.addSubview(fansCount)
-        self.addSubview(followButton)
-        for i in 0..<showList.count {
-            self.addSubview(showList[i])
-        }
-        self.backgroundColor = UIColor.lightGray
     }
     
     @objc func changeButtonState() {
-        if isFollow {
-            isFollow = false
-            followButton.setTitle("关注", for: .normal)
-            followButton.backgroundColor = UIColor.orange
+        weak var weakRef = self
+        if viewModel.datas[cellIndex].isFollow {
+            viewModel.uploadData(index: cellIndex, value: "false", handle: { ()->Void in
+                weakRef?.viewModel.datas[weakRef!.cellIndex].isFollow = false
+                weakRef?.followButton.isSelected = false
+                weakRef?.followButton.backgroundColor = UIColor.orange
+            })
+            
         }
         else {
-            isFollow = true
-            followButton.setTitle("已关注", for: .normal)
-            followButton.backgroundColor = UIColor.gray
+            viewModel.uploadData(index: cellIndex, value: "true", handle: {()->Void in
+                weakRef?.viewModel.datas[weakRef!.cellIndex].isFollow = true
+                weakRef?.followButton.isSelected = true
+                weakRef?.followButton.backgroundColor = UIColor.gray
+            })
         }
-        
     }
+    
+    
 }

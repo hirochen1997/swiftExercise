@@ -10,7 +10,6 @@ import UIKit
 class HomeTVViewModel: NSObject {
     
     var datas: [HomeTVViewData] = []
-
     
     func fetchData(handle: @escaping ()->Void) {
         weak var weakRef = self
