@@ -7,19 +7,23 @@
 
 #import <Foundation/Foundation.h>
 #import <AFNetworking.h>
-#import "MineViewModel.h"
+#import "SEMineViewModel.h"
 
-@implementation MineViewModel
+@interface SEMineViewModel ()
 
-@synthesize datas;
-@synthesize infoSavePath;
+@property  NSString* infoSavePath;
+
+@end
+
+
+@implementation SEMineViewModel
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        datas = [NSMutableDictionary dictionary];
+        self.datas = [NSMutableDictionary dictionary];
         NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        infoSavePath = [docPath stringByAppendingPathComponent:@"MineViewData.json"];
+        self.infoSavePath = [docPath stringByAppendingPathComponent:@"MineViewData.json"];
         [self fetchData];
     }
     return self;
@@ -27,28 +31,27 @@
 
 - (void)fetchData {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([fileManager fileExistsAtPath:infoSavePath]) {
+    if ([fileManager fileExistsAtPath:self.infoSavePath]) {
         // 存在就读取json数据反序列化
         NSLog(@"File Exist");
-        NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:infoSavePath];
+        NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:self.infoSavePath];
         [inputStream open];
         id streamObject = [NSJSONSerialization JSONObjectWithStream:inputStream options:NSJSONReadingAllowFragments error:nil];
         NSMutableDictionary *dict = (NSMutableDictionary*)streamObject;
         [inputStream close];
         
         // 初始化数据
-        datas[@"userName"] = dict[@"userName"];
-        datas[@"userImg"] = dict[@"userImg"];
+        self.datas[@"userName"] = dict[@"userName"];
+        self.datas[@"userImg"] = dict[@"userImg"];
         
     } else {
         // 不存在就创建
-        [fileManager createFileAtPath:infoSavePath contents:nil attributes:nil];
+        [fileManager createFileAtPath:self.infoSavePath contents:nil attributes:nil];
         
         // 初始化数据
-        datas[@"userName"] = @"空";
-        datas[@"userImg"] = @"";
+        self.datas[@"userName"] = @"空";
+        self.datas[@"userImg"] = @"";
     }
-    
     
 }
 

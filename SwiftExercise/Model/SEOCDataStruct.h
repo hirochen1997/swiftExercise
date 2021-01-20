@@ -5,13 +5,13 @@
 //  Created by hiro on 2021/1/18.
 //
 
-#ifndef OCDataStruct_h
-#define OCDataStruct_h
+#ifndef SEOCDataStruct_h
+#define SEOCDataStruct_h
 
 typedef struct {
     NSString *userName;
     NSString *userImg;
-} MineData;
+} SEMineData;
 
 
 #endif /* OCDataStruct_h */

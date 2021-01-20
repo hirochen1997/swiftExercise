@@ -6,14 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MineView.h"
+#import "SEMineView.h"
 
-@implementation MineView
+@implementation SEMineView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        viewModel = [[MineViewModel alloc] init];
+        viewModel = [[SEMineViewModel alloc] init];
         [self initView];
     }
     return self;

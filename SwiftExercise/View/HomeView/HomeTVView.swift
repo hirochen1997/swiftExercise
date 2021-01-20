@@ -15,10 +15,15 @@ class HomeTVView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
     
     var canRefresh = false
     var firstAppear = true
+    var lastPlayIndex = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         initTVView()
+        weak var weakRef = self
+        viewModel.fetchData(handle: { () in
+            weakRef?.collectionView?.reloadData()
+        })
     }
     
     required init?(coder: NSCoder) {
@@ -99,11 +104,11 @@ class HomeTVView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
         if scrollView.contentOffset.y == 0 && canRefresh {
             canRefresh = false
             viewModel.datas.removeAll()
-            viewModel.fetchData()
-            (scrollView as! UICollectionView).layoutIfNeeded()
-            (scrollView as! UICollectionView).reloadData()
+            weak var weakRef = self
+            viewModel.fetchData(handle: { () in
+                weakRef?.collectionView?.reloadData()
+            })
             firstAppear = true
-            print("reload")
         }
         
     }
@@ -123,17 +128,23 @@ class HomeTVView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
         if scrollView.contentOffset.y > cellBottom {
             scrollView.setContentOffset(CGPoint(x: 0, y: cellBottom), animated: false)
             // 拉取新的数据，实现向下滚动无限刷新
-            viewModel.fetchData()
-            (scrollView as! UICollectionView).reloadData()
-            print("more data")
+            weak var weakRef = self
+            viewModel.fetchData(handle: { () in
+                weakRef?.collectionView?.reloadData()
+            })
+ 
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        // 当某个cell刚好完全出现时开始播放tv
-        startTV()
+        let nowIndex = (scrollView as! UICollectionView).indexPath(for: (scrollView as! UICollectionView).visibleCells[0])!.row
+        
+        if nowIndex != lastPlayIndex {
+            startTV() // 当某个新的cell刚好完全出现时开始播放tv
+        }
+        lastPlayIndex = nowIndex
+        
     }
-    
     
     
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class MineViewController: UIViewController{
     override func viewDidLoad() {
-        let mineView = MineView(frame: CGRect(x: 0, y: buttonHeight, width: kScreenWidth, height: kScreenHeight-buttonHeight))
+        let mineView = SEMineView(frame: CGRect(x: 0, y: buttonHeight, width: kScreenWidth, height: kScreenHeight-buttonHeight))
         self.view.addSubview(mineView)
     }
 }
