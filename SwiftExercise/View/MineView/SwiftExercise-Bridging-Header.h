@@ -4,4 +4,4 @@
 #import "SEMineView.h"
 #import "SEOCDataStruct.h"
 #import "SENetworkHelper.h"
-
+#import "SEVideoPlayController.h"

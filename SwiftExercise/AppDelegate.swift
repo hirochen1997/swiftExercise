@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     static var tabHeight: CGFloat = 83
     static let tabBarController = UITabBarController()
+    static var homeNavigationVC: UINavigationController!
+    static var videoPlayVC = SEVideoPlayController()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -34,15 +36,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let MessageVC = MessageViewController()
         let MineVC = MineViewController()
         
+        
+        // 设置主页的导航vc
+        AppDelegate.homeNavigationVC = UINavigationController(rootViewController: HomeVC)
+        AppDelegate.homeNavigationVC.navigationBar.isHidden = true
+        
+        
         // 设置每个标签页的标题
-        HomeVC.tabBarItem.title = "首页"
+        AppDelegate.homeNavigationVC.tabBarItem.title = "首页"
         FoundVC.tabBarItem.title = "发现"
         MessageVC.tabBarItem.title = "信息"
         MineVC.tabBarItem.title = "我的"
         
         // 将标签页对应的ViewController放入UITabBarController
-        AppDelegate.tabBarController.viewControllers = [HomeVC, FoundVC, MessageVC, MineVC]
+        AppDelegate.tabBarController.viewControllers = [AppDelegate.homeNavigationVC, FoundVC, MessageVC, MineVC]
         AppDelegate.tabBarController.tabBar.backgroundColor = UIColor.blue
+
         
         // 将window的根视图设置为tabBar,并设置为key window
         self.window?.rootViewController = AppDelegate.tabBarController

@@ -23,6 +23,7 @@
 		456FF58B25A6E49100EF5109 /* HomeShortVideoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456FF58A25A6E49100EF5109 /* HomeShortVideoViewCell.swift */; };
 		457598A725B531C500200A16 /* SEMineViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 457598A625B531C500200A16 /* SEMineViewModel.m */; };
 		457598B325B6D2CD00200A16 /* SENetworkHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 457598B225B6D2CD00200A16 /* SENetworkHelper.m */; };
+		457598BD25B9598300200A16 /* SEVideoPlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457598BC25B9598300200A16 /* SEVideoPlayController.m */; };
 		459A521325AD8FE0000C0222 /* HomeTVViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459A521225AD8FE0000C0222 /* HomeTVViewCell.swift */; };
 		45C1119E25A448DA003D28CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1119D25A448DA003D28CA /* AppDelegate.swift */; };
 		45C111A025A448DA003D28CA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1119F25A448DA003D28CA /* SceneDelegate.swift */; };
@@ -57,6 +58,8 @@
 		457598AB25B540C900200A16 /* SEOCDataStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEOCDataStruct.h; sourceTree = "<group>"; };
 		457598B125B6D2BF00200A16 /* SENetworkHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SENetworkHelper.h; sourceTree = "<group>"; };
 		457598B225B6D2CD00200A16 /* SENetworkHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SENetworkHelper.m; sourceTree = "<group>"; };
+		457598BB25B9597200200A16 /* SEVideoPlayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEVideoPlayController.h; sourceTree = "<group>"; };
+		457598BC25B9598300200A16 /* SEVideoPlayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEVideoPlayController.m; sourceTree = "<group>"; };
 		459A521225AD8FE0000C0222 /* HomeTVViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTVViewCell.swift; sourceTree = "<group>"; };
 		45C1119A25A448DA003D28CA /* SwiftExercise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExercise.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45C1119D25A448DA003D28CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -201,6 +204,8 @@
 				45C111B825A46625003D28CA /* FoundViewController.swift */,
 				45C111BB25A46647003D28CA /* MessageViewController.swift */,
 				45C111BE25A46656003D28CA /* MineViewController.swift */,
+				457598BB25B9597200200A16 /* SEVideoPlayController.h */,
+				457598BC25B9598300200A16 /* SEVideoPlayController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -329,6 +334,7 @@
 				45630D2025B2DC2100D812F2 /* SEMineView.m in Sources */,
 				45C111BC25A46647003D28CA /* MessageViewController.swift in Sources */,
 				45693AB025ABFD640097903B /* HomeFollowView.swift in Sources */,
+				457598BD25B9598300200A16 /* SEVideoPlayController.m in Sources */,
 				45C111B525A465E8003D28CA /* HomeViewController.swift in Sources */,
 				459A521325AD8FE0000C0222 /* HomeTVViewCell.swift in Sources */,
 				45693AC925AC4E4E0097903B /* HomeRecommendViewModel.swift in Sources */,

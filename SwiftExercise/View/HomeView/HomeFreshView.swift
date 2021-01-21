@@ -112,6 +112,11 @@ class HomeFreshView: UIView, UICollectionViewDelegate, UICollectionViewDataSourc
         return CGSize(width: width, height: height)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("select ", indexPath.row)
+        AppDelegate.videoPlayVC.playVideo(withURL: "https://v-cdn.zjol.com.cn/280443.mp4")
+        AppDelegate.homeNavigationVC.pushViewController(AppDelegate.videoPlayVC, animated: true)
+    }
     
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -149,4 +154,6 @@ class HomeFreshView: UIView, UICollectionViewDelegate, UICollectionViewDataSourc
             (scrollView as! UICollectionView).collectionViewLayout.invalidateLayout()
         }
     }
+    
+    
 }
