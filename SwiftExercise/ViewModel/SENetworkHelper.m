@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <AFNetworking.h>
 #import "SENetworkHelper.h"
+#import <AVKit/AVKit.h>
 
 @implementation SENetworkHelper
 + (void)httpGetRequest:(NSString *)url
@@ -38,6 +39,18 @@
         NSLog(@"post请求失败：%@", error);
     }];
 }
+
+/*
++ (UIImage*) getFrameOfVideo:(NSString*) url {
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:url] options:nil];
+    AVAssetImageGenerator *assetGen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    assetGen.appliesPreferredTrackTransform = true;
+    CMTime time = CMTimeMakeWithSeconds(10, 10); // 获取第一秒的截图
+    CGImageRef image = [assetGen copyCGImageAtTime:time actualTime:nil error:nil];
+    UIImage *result = [[UIImage alloc] initWithCGImage:image];
+    CGImageRelease(image);
+    return result;
+}*/
 
 @end
 

@@ -13,10 +13,15 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     var canRefresh = false
     var recommendCellBottom: [CGFloat] = [0,0]
+    var collectionView: UICollectionView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         initShortVideoView()
+        weak var weakRef = self
+        viewModel.fetchData(handle: { ()->Void in
+            weakRef?.collectionView!.reloadData()
+        })
     }
     
     required init?(coder: NSCoder) {
@@ -30,7 +35,7 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         layout.minimumInteritemSpacing = HomeShortVideoViewCell.minimumInteritemSpacing
         layout.sectionInset = HomeShortVideoViewCell.sectionInset
         layout.estimatedItemSize = CGSize(width: (kScreenWidth-layout.minimumInteritemSpacing-layout.sectionInset.left-layout.sectionInset.right)/2, height: kScreenWidth*0.8) // itemSize会固定，estimatedItemSize可以动态调整
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - 2*buttonHeight), collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - 2*buttonHeight), collectionViewLayout: layout)
         collectionView.register(HomeShortVideoViewCell.self, forCellWithReuseIdentifier: "ShortVideoCell")
         
         collectionView.delegate = self
@@ -39,10 +44,9 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         collectionView.isPagingEnabled = false
         collectionView.isScrollEnabled = true
         collectionView.showsVerticalScrollIndicator = true
-        collectionView.backgroundColor = UIColor.white
+        collectionView.backgroundColor = UIColor.black
         //collectionView.bounces = false
 
-      
         self.addSubview(collectionView)
 
     }
@@ -62,11 +66,12 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         cell.info.text = t_data.info
         cell.userName.text = t_data.useName
         cell.title.text = t_data.title
+        cell.videoFrameImg.image = t_data.videoFrameImg
         
         // 获得title中字符串的高度
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
         let option = NSStringDrawingOptions.usesLineFragmentOrigin
-        var textHeight = cell.title.text?.boundingRect(with: CGSize(width: cell.title.frame.width, height: cell.title.frame.height), options: option, attributes: attributes, context: nil).height
+        var textHeight = CGFloat(ceilf(Float((cell.title.text?.boundingRect(with: CGSize(width: cell.title.frame.width, height: cell.title.frame.height), options: option, attributes: attributes, context: nil).height)!)))
         
         if cell.title.text! == "" {
             // 空字符串也会计算高度，这里需要置为0
@@ -74,9 +79,11 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         }
         
         // 根据title的字符串高度，部分控件需要下移
-        cell.userImg.frame = CGRect(x: cell.userImg.frame.origin.x, y: cell.userImg.frame.origin.y + textHeight!, width: cell.userImg.frame.width, height: cell.userImg.frame.height)
-        cell.userName.frame = CGRect(x: cell.userName.frame.origin.x, y: cell.userName.frame.origin.y + textHeight!, width: cell.userName.frame.width, height: cell.userName.frame.height)
-        cell.info.frame = CGRect(x: cell.info.frame.origin.x, y: cell.info.frame.origin.y+textHeight!, width: cell.info.frame.width, height: cell.info.frame.height)
+        cell.userImg.frame = CGRect(x: cell.userImg.frame.origin.x, y: cell.userImg.frame.origin.y + textHeight, width: cell.userImg.frame.width, height: cell.userImg.frame.height)
+        cell.userName.frame = CGRect(x: cell.userName.frame.origin.x, y: cell.userName.frame.origin.y + textHeight, width: cell.userName.frame.width, height: cell.userName.frame.height)
+        cell.info.frame = CGRect(x: cell.info.frame.origin.x, y: cell.info.frame.origin.y+textHeight, width: cell.info.frame.width, height: cell.info.frame.height)
+        
+        cell.layoutSubviews()
         
         return cell
     }
@@ -84,7 +91,7 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
         let option = NSStringDrawingOptions.usesLineFragmentOrigin
-        var textHeight = viewModel.datas[indexPath.row].title.boundingRect(with: CGSize(width: (kScreenWidth-HomeShortVideoViewCell.minimumInteritemSpacing-HomeShortVideoViewCell.sectionInset.left-HomeShortVideoViewCell.sectionInset.right)/2, height: 40), options: option, attributes: attributes, context: nil).height
+        var textHeight = CGFloat(ceilf(Float(viewModel.datas[indexPath.row].title.boundingRect(with: CGSize(width: (kScreenWidth-HomeShortVideoViewCell.minimumInteritemSpacing-HomeShortVideoViewCell.sectionInset.left-HomeShortVideoViewCell.sectionInset.right)/2, height: 40), options: option, attributes: attributes, context: nil).height)))
         
         // 空字符串也会有高度，需要置为0
         if viewModel.datas[indexPath.row].title == "" {
@@ -113,14 +120,19 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         return CGSize(width: width, height: height)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        AppDelegate.videoPlayVC.playVideo(withURL: viewModel.datas[indexPath.row].videoURL)
+        AppDelegate.homeNavigationVC.pushViewController(AppDelegate.videoPlayVC, animated: true)
+    }
+    
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView.contentOffset.y == 0 && canRefresh {
             canRefresh = false
             viewModel.datas.removeAll()
-            viewModel.fetchData()
-            (scrollView as! UICollectionView).layoutIfNeeded()
-            (scrollView as! UICollectionView).reloadData()
-            print("reload")
+            weak var weakRef = self
+            viewModel.fetchData(handle: { ()->Void in
+                weakRef?.collectionView!.reloadData()
+            })
         }
         
     }
@@ -143,9 +155,10 @@ class HomeRecommendView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             scrollView.setContentOffset(CGPoint(x: 0, y: cellBottom), animated: false)
             
             // 拉取新的数据，实现向下滚动无限刷新
-            viewModel.fetchData()
-            (scrollView as! UICollectionView).reloadData()
-            (scrollView as! UICollectionView).collectionViewLayout.invalidateLayout()
+            weak var weakRef = self
+            viewModel.fetchData(handle: { ()->Void in
+                weakRef?.collectionView!.reloadData()
+            })
         }
     }
 }

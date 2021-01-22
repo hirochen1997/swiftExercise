@@ -58,6 +58,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     self.navigationController.navigationBar.hidden = true;
     [playLayer.player pause];
+    [playLayer.player seekToTime:CMTimeMake(0, 1)];
 }
 
 - (void)playVideoWithURL:(NSString *)url {

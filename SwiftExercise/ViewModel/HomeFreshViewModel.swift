@@ -10,36 +10,32 @@ import UIKit
 class HomeFreshViewModel: NSObject {
     var datas: [HomeShortVideoViewData] = []
     
-    override init() {
-        super.init()
-        fetchData() // 拉取初始数据
+    func fetchData(handle: @escaping ()->Void) {
+        weak var weakRef = self
+        SENetworkHelper.httpGetRequest("http://localhost:12306/homeFresh", callback: {(arr: Array<Dictionary>)->Void in
+            for _ in 0..<onceLoadNum {
+                let pos = Int(arc4random()) % arr.count
+                var tempData = HomeShortVideoViewData()
+                tempData.videoURL = arr[pos]["url"] as! String
+                tempData.useName = arr[pos]["userName"] as! String
+                tempData.title = arr[pos]["title"] as! String
+                
+                let publishTime = Int(arr[pos]["time"] as! String)!
+                if publishTime < 24 {
+                    tempData.info = String(publishTime) + "小时前"
+                } else {
+                    tempData.info = String(publishTime / 24) + "天前"
+                }
+                
+                let urlStr = NSURL(string: arr[pos]["videoImg"] as! String)!
+                let data = NSData(contentsOf: urlStr as URL)!
+                tempData.videoFrameImg = UIImage(data: data as Data)!
+                
+                weakRef?.datas.append(tempData)
+            }
+            handle() // 回调通知view数据已经拉取完成
+        })
     }
-    
-    func fetchData() {
-        for _ in 0..<onceLoadNum {
-            var t_data = HomeShortVideoViewData(videoFrameImgURL: "", useName: "取\(datas.count)", info: "", userImgURL: "", title: "")
-            
-            // 读取数据
-            let publishTime = arc4random() % 100
-            if publishTime < 24 {
-                t_data.info = String(publishTime) + "小时前"
-            }
-            else {
-                t_data.info = String(publishTime/24) + "天前"
-            }
-            
-            let hasTitle = arc4random() % 2
-            if hasTitle == 1 {
-                t_data.title = "艾斯欧地方就是董非农你好收水电费你你你欧马可到佛安防部！！"
-            }
-            else {
-                t_data.title = ""
-            }
-            datas.append(t_data)
-        }
-    }
-    
-    
     
     
 }

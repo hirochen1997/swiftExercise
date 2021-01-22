@@ -11,33 +11,32 @@ class HomeRecommendViewModel: NSObject {
     
     var datas: [HomeShortVideoViewData] = []
     
-    override init() {
-        super.init()
-        fetchData() // 拉取初始数据
-    }
-    
-    func fetchData() {
-        for _ in 0..<onceLoadNum {
-            var t_data = HomeShortVideoViewData(videoFrameImgURL: "", useName: "名字太长了爱神的箭佛", info: "", userImgURL: "", title: "")
-            
-            // 读取数据
-            let watchAmount = arc4random() % 10000000
-            if watchAmount < 10000 {
-                t_data.info = "播放量：" + String(watchAmount)
+    func fetchData(handle: @escaping ()->Void) {
+        weak var weakRef = self
+        SENetworkHelper.httpGetRequest("http://localhost:12306/homeRecommend", callback: {(arr: Array<Dictionary>)->Void in
+            for _ in 0..<onceLoadNum {
+                let pos = Int(arc4random()) % arr.count
+                var tempData = HomeShortVideoViewData()
+                tempData.videoURL = arr[pos]["url"] as! String
+                tempData.useName = arr[pos]["userName"] as! String
+                tempData.title = arr[pos]["title"] as! String
+                
+                let watchAmount = Int(arr[pos]["watch"] as! String)!
+                if watchAmount < 10000 {
+                    tempData.info = "播放量：" + String(watchAmount)
+                }
+                else {
+                    tempData.info = "播放量：" + String(watchAmount/10000) + "万"
+                }
+                
+                let urlStr = NSURL(string: arr[pos]["videoImg"] as! String)!
+                let data = NSData(contentsOf: urlStr as URL)!
+                tempData.videoFrameImg = UIImage(data: data as Data)!
+                
+                weakRef?.datas.append(tempData)
             }
-            else {
-                t_data.info = "播放量：" + String(watchAmount/10000) + "万"
-            }
-            
-            let hasTitle = arc4random() % 2
-            if hasTitle == 1 {
-                t_data.title = "艾斯欧地方就是董非农你好收水电费你你你欧马可到佛安防部！！"
-            }
-            else {
-                t_data.title = ""
-            }
-            datas.append(t_data)
-        }
+            handle() // 回调通知view数据已经拉取完成
+        })
     }
     
     

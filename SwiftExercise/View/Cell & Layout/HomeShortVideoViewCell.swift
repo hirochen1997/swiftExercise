@@ -51,7 +51,7 @@ class HomeShortVideoViewCell: UICollectionViewCell {
         
         title.frame = CGRect(x: 0, y: videoFrameImg.frame.origin.y+videoFrameImg.frame.height+3, width: videoFrameImg.frame.width, height: 40)
         title.numberOfLines = 0 // 自动换行
-        title.tintColor = UIColor.black
+        title.textColor = UIColor.white
         title.font = UIFont.systemFont(ofSize: 15)
         title.text = ""
         
@@ -61,15 +61,20 @@ class HomeShortVideoViewCell: UICollectionViewCell {
         userImg.layer.cornerRadius = userImg.frame.width/2
         
         userName.frame = CGRect(x: userImg.frame.origin.x + userImg.frame.width + 5, y: userImg.frame.origin.y, width: 60, height: 30)
-        userName.tintColor = UIColor.black
+        userName.textColor = UIColor.white
         userName.text = "取个什么名字"
         userName.font = UIFont.systemFont(ofSize: 8)
         
         info.frame = CGRect(x: self.frame.width - 70, y: userName.frame.origin.y, width: 60, height: 30)
         info.text = "空"
-        info.tintColor = UIColor.black
+        info.textColor = UIColor.white
         info.font = UIFont.systemFont(ofSize: 8)
         info.textAlignment = .right
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        title.sizeToFit()
     }
     
 }

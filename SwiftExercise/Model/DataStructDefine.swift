@@ -16,11 +16,12 @@ struct HomeFollowViewData {
 }
 
 struct HomeShortVideoViewData {
-    var videoFrameImgURL = ""
+    var videoURL = ""
     var useName = ""
     var info = ""
     var userImgURL = ""
     var title = ""
+    var videoFrameImg = UIImage()
 }
 
 struct HomeTVViewData {

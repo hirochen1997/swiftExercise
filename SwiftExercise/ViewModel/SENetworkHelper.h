@@ -19,6 +19,8 @@ typedef void(^blk2)(void);
 + (void) httpPostRequest:(NSString* _Nonnull) url
                 callback:(blk2 _Nonnull) handle;
 
+//+ (UIImage* _Nonnull) getFrameOfVideo:(NSString* _Nonnull) url;
+
 @end
 
 #endif /* NetworkHelper_h */
